@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="index.css">
+    <title>调查问卷</title>
+</head>
+
+<body>
+    <div id="app">
+        <ym-one v-if="existence == 1" :genders="genderNames" @exis="handleGetTotal">
+            <p>1.请问您的性别是：</p>
+        </ym-one>
+        <ym-two v-if="existence == 2" :interests="interests" @exis2="handleGetTotal" @exis3="handleGetTotal">
+            <p>2.请选择您的兴趣爱好：</p>
+        </ym-two>
+        <ym-three v-if="existence == 3" @exis4="handleGetTotal">
+            <p>3.请介绍你自己：</p>
+        </ym-three>
+    </div>
+</body>
+<script src="vue.min.js"></script>
+<script src="index.js"></script>
+<script src="index2.js"></script>
+<script src="index3.js"></script>
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            existence: 1,
+            genderNames: {
+                man: "男",
+                woman: "女",
+                null: "保密"
+            },
+            interests: {
+                readingBooks: "看书",
+                swim: "游泳",
+                run: "跑步",
+                watchMovies: "看电影",
+                listenToMusic: "听音乐"
+            }
+        },
+        methods: {
+            handleGetTotal: function (total) {
+                this.existence = total;
+            }
+        }
+    })
+</script>
+
+</html>
