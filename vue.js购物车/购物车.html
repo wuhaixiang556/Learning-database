@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>购物车</title>
+    <style>
+        table {
+            border: 1px solid #e9e9e9;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            width: 80px;
+            height: 20px;
+            padding: 8px 16px;
+            border: 1px solid #e9e9e9;
+            text-align: center;
+        }
+
+        th {
+            background: #1ba839;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+
+        .colorRed {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" v-model="allChecked" @click="handleClick">
+                    </th>
+                    <th class="pointer" @click="handleClickSortDown" v-if="convert == 1">自动排序<span class="colorRed">*</span></th>
+                    <th class="pointer" @click="handleClickSortUp" v-if="convert == 2">自动排序<span class="colorRed">*</span></th>
+                    <th>商品名称</th>
+                    <th>商品单价</th>
+                    <th>购买数量</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item, index) in items">
+                    <td>
+                        <input type="checkbox" v-model="item.checkedData">
+                    </td>
+                    <td>{{ index+1 }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>￥{{ item.price }}</td>
+                    <td>
+                        <button @click="reduceList(index)" :disabled="item.count === 1">-</button>
+                        {{ item.count }}
+                        <button @click="addList(index)">+</button>
+                    </td>
+                    <td>
+                        <span class="pointer" @click="removeList(index)">移除</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            总价：￥{{ totalPirce }}
+        </div>
+    </div>
+</body>
+<script src="vue.js"></script>
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            items: [{
+                    checkedData: false,
+                    name: "iPhone 7",
+                    price: 6188,
+                    count: 1
+                },
+                {
+                    checkedData: false,
+                    name: "iPad Pro",
+                    price: 5888,
+                    count: 1
+                },
+                {
+                    checkedData: false,
+                    name: "MacBook Pro",
+                    price: 21488,
+                    count: 1
+                }
+            ],
+            allChecked: false,
+            convert: 1
+        },
+        computed: {
+            totalPirce: function () {
+                var total = 0;
+                for (var i = 0; i < this.items.length; i++) {
+                    console.log(i);
+                    if (this.items[i].checkedData == true) {
+                        total += this.items[i].price * this.items[i].count;
+                    }
+                }
+                return total;
+            }
+        },
+        methods: {
+            reduceList: function (index) {
+                if (this.items[index].count === 1) return;
+                this.items[index].count--;
+            },
+            addList: function (index) {
+                this.items[index].count++;
+            },
+            removeList: function (index) {
+                this.items.splice(index, 1);
+            },
+            handleClick: function () {
+                if (this.allChecked == false) {
+                    for (var i = 0; i < this.items.length; i++) {
+                        this.items[i].checkedData = true;
+                    }
+                }
+                if (this.allChecked == true) {
+                    for (var i = 0; i < this.items.length; i++) {
+                        this.items[i].checkedData = false;
+                    }
+                }
+            },
+            handleClickSortDown: function () {
+                this.convert = 2;
+                this.items.sort(function (a, b) {
+                    return a.price > b.price;
+                })
+            },
+            handleClickSortUp: function () {
+                this.convert = 1;
+                this.items.sort(function (a, b) {
+                    return a.price < b.price;
+                })
+            },
+        }
+    })
+</script>
+
+</html>
